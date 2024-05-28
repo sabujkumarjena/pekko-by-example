@@ -51,3 +51,56 @@ Matrializing a graph = materializing all components
 - we have to choose one
 
 A materialized value can be ANYTHING.
+
+A component can materialize multiple times
+
+## Operator Fusion ##
+
+- stream components running on the same actor
+- async boundaries between stream components
+
+An sync boundary contains
+- everything from the previous boundary (if any)
+- everything between the previous boundary and this boundary
+
+Communication based on actor messages
+
+### Summary ###
+
+Akka Streams components are fused = run on the same actor
+
+#### Async boundaries ####
+
+```scala 
+val graph = source.async
+        .via(Flow[Int].map(_+1)).async
+        .via(...).async
+        .to(Sink.foreach(println))
+        
+```
+- components run on different actors
+- Best when : individual operations are expensive
+- Avoid when: operations are comparable with a message pass
+- Ordering guarantee  of individual element through the graph across async boundaries
+
+## Backpressure ##
+- Elements flow as response to demand from consumers
+- Fast consumers: all is well
+- Slow consumer: problem
+- if the consumer (sink) slows down it signals immediate previous component to slow down and the process may repeat till source.
+- default buffer in pekko stream is 16 elements.
+
+Reactions to backpressure (in order)
+- try to slow down if possible
+- buffer elements util there is more demand
+- drop down elements from the buffer if it overflows
+- tear down/kill the whole stream (failure)
+
+### Summary ###
+- Data flows through streams in response to demand
+- Pekko Streams can slow down fast producers
+- Back pressure protocol is transparent
+
+```scala
+aFlow.buffer(size = 10, overflowStrategy = OverflowStrategy.dropHead)
+```
