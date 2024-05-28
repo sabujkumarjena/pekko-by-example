@@ -1,4 +1,4 @@
-package com.allevite.pekkoStream._Introduction
+package com.allevite.pekkoStream.part1_basics.chapt1_Introduction
 
 import org.apache.pekko
 import org.apache.pekko.{Done, NotUsed}
@@ -10,7 +10,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 object Introduction extends App :
-  implicit val system: ActorSystem = ActorSystem("Introduction")
+  given system: ActorSystem = ActorSystem("Introduction")
 
 //  Source.single("Allevite").to(Sink.foreach(println))
 //  Source.single("Allevite").runForeach(i => println(i))
@@ -84,6 +84,7 @@ object Introduction extends App :
   val nameSink = Sink.foreach[String](println)
 
   nameSource.via(longNameFlow).via(limitFlow).to(nameSink).run()
+  
 //nameSource.filter(_.length > 5).take(2).runForeach(println)
 
 

@@ -28,3 +28,26 @@ We build streams by connecting components
 Directions
 - upstream = to the source
 - downstream = to the sink
+
+Materialising
+- Components are static until they run
+```scala
+val graph = source.via(flow).to(sink)
+
+val result = graph.run()
+```
+- result is the materialized value
+- A graph is a "blueprint" for a stream
+Running a graph allocates the right resources
+- actors, thread pools
+- sockets, connections
+- etc - everything is transparent
+ Running a graph = materializing
+
+Matrializing a graph = materializing all components
+
+- each component produces a materialised value when run
+- each graph produces a single materialized value
+- we have to choose one
+
+A materialized value can be ANYTHING.
