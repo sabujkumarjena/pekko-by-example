@@ -151,3 +151,9 @@ RestartSource.onFailureWithBackoff(
 ```scala
 aStream.withAttributes(ActorAttributes.supervisionStrategy(decider))
 ```
+## Testing Streams ##
+
+Unit testing Pekko Streams
+- final results
+- integrating with test actors
+- Streams TestKit
