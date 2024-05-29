@@ -104,3 +104,50 @@ Reactions to backpressure (in order)
 ```scala
 aFlow.buffer(size = 10, overflowStrategy = OverflowStrategy.dropHead)
 ```
+## Graphs ##
+- The Graph DSL
+- Non-linear components
+- - fan-out
+- - fan-in
+- Fan-out components
+- - Broadcast
+- - Balance
+- Fan-in components
+- - zip/ZipWith
+- - Merge
+- - Concat
+- uniform/non-uniform
+
+## Fault Tolerance ##
+
+Agenda
+- React to failures in streams
+- Logging
+```scala
+aStream.log("tag")
+```
+- Recovering
+```scala
+aStream.recover {
+ case ex: RuntimeException => 42
+}
+
+aStream.recoverWithRetries(3,  {
+ case ex: RuntimeException => 42
+})
+
+```
+- Backoff supervision
+```scala
+RestartSource.onFailureWithBackoff(
+ minBackoff = 1.second,
+ maxBackoff = 10.seconds,
+ randomFactor = 0.2,
+ maxRestarts = 3
+)(createAnotherSourceInCaseOfFailure)
+
+```
+- Supervision strategies
+```scala
+aStream.withAttributes(ActorAttributes.supervisionStrategy(decider))
+```
